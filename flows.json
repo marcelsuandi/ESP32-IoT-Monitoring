@@ -1,0 +1,483 @@
+[
+    {
+        "id": "5350fa9aca2da340",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqtt_in",
+        "type": "mqtt in",
+        "z": "5350fa9aca2da340",
+        "name": "ESP32 Sensor MQTT",
+        "topic": "sensor/data",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "mqtt_broker",
+        "inputs": 0,
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "json_node",
+                "debug_node"
+            ]
+        ]
+    },
+    {
+        "id": "json_node",
+        "type": "json",
+        "z": "5350fa9aca2da340",
+        "name": "JSON Parser",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "function_sql",
+                "5ac4516e195b4e04",
+                "f19bd900b2d3d691",
+                "0fd582bfe4cb8386",
+                "ec0c33404d46bce2",
+                "8038b35e04452c45",
+                "3d587aa0299293b0"
+            ]
+        ]
+    },
+    {
+        "id": "function_sql",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert SQL",
+        "func": "msg.topic = \"INSERT INTO sensor_data (temperature, humidity, pressure) VALUES (\" \n+ msg.payload.temperature + \",\" \n+ msg.payload.humidity + \",\" \n+ msg.payload.pressure + \")\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 500,
+        "wires": [
+            [
+                "3bc4a028fd50cced"
+            ]
+        ]
+    },
+    {
+        "id": "temp_gauge",
+        "type": "ui_gauge",
+        "z": "5350fa9aca2da340",
+        "name": "Temperature",
+        "group": "dashboard_group",
+        "order": 2,
+        "width": 5,
+        "height": 5,
+        "gtype": "gage",
+        "title": "🌡Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 50,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 950,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "hum_gauge",
+        "type": "ui_gauge",
+        "z": "5350fa9aca2da340",
+        "name": "Humidity",
+        "group": "dashboard_group",
+        "order": 4,
+        "width": 5,
+        "height": 5,
+        "gtype": "wave",
+        "title": "💧Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#00b5ff",
+            "#00b5ff",
+            "#00b5ff"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 940,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "press_gauge",
+        "type": "ui_gauge",
+        "z": "5350fa9aca2da340",
+        "name": "Pressure",
+        "group": "dashboard_group",
+        "order": 6,
+        "width": 5,
+        "height": 5,
+        "gtype": "donut",
+        "title": "🌬Pressure",
+        "label": "hPa",
+        "format": "{{value}}",
+        "min": 900,
+        "max": 1100,
+        "colors": [
+            "#b5ff00",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 940,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "chart_temp",
+        "type": "ui_chart",
+        "z": "5350fa9aca2da340",
+        "name": "Temperature Chart",
+        "group": "dashboard_group",
+        "order": 1,
+        "width": 10,
+        "height": 5,
+        "label": "Temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "60",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 970,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "debug_node",
+        "type": "debug",
+        "z": "5350fa9aca2da340",
+        "name": "MQTT Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 410,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "3bc4a028fd50cced",
+        "type": "mysql",
+        "z": "5350fa9aca2da340",
+        "mydb": "cdd2480563e194cc",
+        "name": "",
+        "x": 960,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ac4516e195b4e04",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Temperature",
+        "func": "msg.payload = msg.payload.temperature;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 140,
+        "wires": [
+            [
+                "temp_gauge"
+            ]
+        ]
+    },
+    {
+        "id": "0fd582bfe4cb8386",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Humidity",
+        "func": "msg.payload = msg.payload.humidity;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 260,
+        "wires": [
+            [
+                "hum_gauge"
+            ]
+        ]
+    },
+    {
+        "id": "f19bd900b2d3d691",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Pressure",
+        "func": "msg.payload = msg.payload.pressure;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 380,
+        "wires": [
+            [
+                "press_gauge"
+            ]
+        ]
+    },
+    {
+        "id": "ec0c33404d46bce2",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Temperature Chart",
+        "func": "msg.payload = msg.payload.temperature;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 200,
+        "wires": [
+            [
+                "chart_temp"
+            ]
+        ]
+    },
+    {
+        "id": "8038b35e04452c45",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Humidity Chart",
+        "func": "msg.payload = msg.payload.humidity;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 320,
+        "wires": [
+            [
+                "7a3e10812a16a4cd"
+            ]
+        ]
+    },
+    {
+        "id": "7a3e10812a16a4cd",
+        "type": "ui_chart",
+        "z": "5350fa9aca2da340",
+        "name": "Humidity Chart",
+        "group": "dashboard_group",
+        "order": 3,
+        "width": 10,
+        "height": 5,
+        "label": "Humidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 960,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3d587aa0299293b0",
+        "type": "function",
+        "z": "5350fa9aca2da340",
+        "name": "Insert Pressure Chart",
+        "func": "msg.payload = msg.payload.pressure;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 440,
+        "wires": [
+            [
+                "373c740f6d28df0d"
+            ]
+        ]
+    },
+    {
+        "id": "373c740f6d28df0d",
+        "type": "ui_chart",
+        "z": "5350fa9aca2da340",
+        "name": "Pressure Chart",
+        "group": "dashboard_group",
+        "order": 5,
+        "width": 10,
+        "height": 5,
+        "label": "Pressure",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No Data",
+        "dot": false,
+        "ymin": "900",
+        "ymax": "1100",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 960,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "mqtt_broker",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true
+    },
+    {
+        "id": "dashboard_group",
+        "type": "ui_group",
+        "name": "Sensor Dashboard",
+        "tab": "dashboard_tab",
+        "order": 1,
+        "disp": true,
+        "width": 15,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cdd2480563e194cc",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "iot_monitoring",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "dashboard_tab",
+        "type": "ui_tab",
+        "name": "ESP32 Visualisasi Data",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f93456887277d3db",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-mysql": "3.0.0"
+        }
+    }
+]
